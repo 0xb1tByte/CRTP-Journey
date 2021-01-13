@@ -4,7 +4,6 @@ sET-ItEM ( 'V'+'aR' + 'IA' + 'blE:1q2' + 'uZx' ) ( [TYpE]("{1}{0}"-F'F','rE' ) )
 Import-Module  .\Microsoft.ActiveDirectory.Management.dll
 Import-PowershellDataFile .\ActiveDirectory.psd1
 Import-Module .\Find-PSRemotingLocalAdminAccess.ps1
-Import-Module .\Find-WMILocalAdminAccess.ps1
 Import-Module .\PowerView.ps1
 Import-Module .\PowerView_dev.ps1
 Import-Module .\PowerupSQL.ps1
@@ -68,14 +67,14 @@ Get-ADOrganizationalUnit -Filter * | select Name
 Write-Output "+========================================+";
 Write-Output "           [+] Shares Enumeration        ";
 Write-Output "+========================================+";
-Write-Output "   [1] Shares (exclude default shares) :";
-Invoke-ShareFinder -ExcludeStandard -ExcludePrint -ExcludeIPC
+Write-Output "   [1] Shares :";
+Invoke-ShareFinder 
 
-Write-Output "+========================================+";
-Write-Output "           [+] ACLs Enumeration            ";
-Write-Output "+========================================+";
-Write-Output "   [1] Find Interesting ACLs:";
-Invoke-ACLScanner -ResolveGUIDs | select ActiveDirectoryRights, IdentityReference, objectDN | fl
+#Write-Output "+========================================+";
+#Write-Output "           [+] ACLs Enumeration            ";
+#Write-Output "+========================================+";
+#Write-Output "   [1] Find Interesting ACLs:";
+#Invoke-ACLScanner -ResolveGUIDs | select ActiveDirectoryRights, IdentityReference, objectDN | fl
 
 Write-Output "+========================================+";
 Write-Output "           [+] GPOs Enumeration            ";
@@ -87,14 +86,15 @@ Write-Output "+========================================+";
 Write-Output "  [+] Logon and Sessions Enumeration      ";
 Write-Output "+========================================+";
 Write-Output "   [1] Finding Local Admin Access :";
-Find-LocalAdminAccess
-Write-Output "   [2] DA Sessions :";
-Invoke-UserHunter -CheckAccess | select UserName, ComputerName, IPAddress, SessionFrom, LocalAdmin | fl
+Find-PSRemotingLocalAdminAccess
+#Write-Output "   [2] DA Sessions :";
+##Find-DomainUserLocation -Verbose
+#Invoke-UserHunter -CheckAccess | select UserName, ComputerName, IPAddress, SessionFrom, LocalAdmin | fl
 
 Write-Output "+========================================+";
 Write-Output "       [+] Database Enumeration      ";
 Write-Output "+========================================+";
 Write-Output "   [1] Finding SQL Servers :";
-Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded - Verbose
+Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Verbose
 Write-Output "   [2] Extracting Information of Accessible SQL Servers :";
 Get-SQLInstanceDomain | Get-SQLServerinfo | select ComputerName,DomainName,ServiceName,ServiceAccount,SQLServerEdition,Currentlogin,IsSysadmin
