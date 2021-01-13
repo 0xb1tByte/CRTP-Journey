@@ -1,4 +1,4 @@
-# ADEnum :
+# ADEnum.ps1 :
 A simple script to automate some of manual AD enumeration commands. The script is relying in the following tools/scripts/dll: 
 - Microsoft.ActiveDirectory.Management.dll
 - ActiveDirectory.psd1
