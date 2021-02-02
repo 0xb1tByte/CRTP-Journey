@@ -12,3 +12,10 @@ A simple script to automate some of manual AD enumeration commands. The script i
 - The script was tested in the **Advanced Red Team Lab (CRTE)** 
 - The network noise of the script has not been tested
 - The script is still **under development and not completed**
+
+
+# Sample Outputs :
+
+![alt text](https://github.com/0xb1tByte/CRTP-Journey/blob/main/Scripts/2.png)
+![alt text](https://github.com/0xb1tByte/CRTP-Journey/blob/main/Scripts/3.png)
+![alt text](https://github.com/0xb1tByte/CRTP-Journey/blob/main/Scripts/1.png)
