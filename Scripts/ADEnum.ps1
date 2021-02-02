@@ -24,29 +24,35 @@ Write-Output "   [5] Trusts of the Current Domain :";
 Get-NetDomainTrust
 Write-Output "   [6] Trusts of the Current Forest :";
 Get-NetForestDomain -Verbose | Get-NetDomainTrust
+Write-Output "   [7] Map Domain Trust :";
+Invoke-MapDomainTrust | select SourceName,TargetName,TrustDirection
 
 Write-Output "+========================================+";
 Write-Output "           [+] Users Enumeration        ";
 Write-Output "+========================================+";
 Write-Output "   [1] All users :";
-Get-ADUser -Filter * | select SamAccountName
+get-aduser -filter * -Properties * | Select Description, samaccountname
 Write-Output "   [2] Unconstrained Delegation on Users :";
 Get-ADUser -Filter {TrustedForDelegation -eq $True}
 Write-Output "   [3] ASREPRoastable Users :";
 Get-ADUser -Filter {DoesNotRequirePreAuth -eq $True} -Properties DoesNotRequirePreAuth  | select SamAccountName,SID,DistinguishedName
 Write-Output "   [4] Kerberoastable Users :"
 #Get-ADUser -filter {ServicePrincipalName -like "*"} -property serviceprincipalname | select SamAccountName,SID,DistinguishedName
-Get-NetUser -SPN | select serviceprincipalname,samaccountname
+
 
 Write-Output "+========================================+";
 Write-Output "           [+] Computers Enumeration        ";
 Write-Output "+========================================+";
 Write-Output "   [1] Computers :";
-Get-ADComputer -Filter * | select DNSHostName
+get-adcomputer -filter * -Properties ipv4address | where {$_.IPV4address} | select name,ipv4address
 Write-Output "   [2] Computers (Live Hosts) :";
 Get-ADComputer -Filter * -Properties DNSHostName | %{Test-Connection -Count 1 -ComputerName $_.DNSHostName} | select IPV4Address
 Write-Output "   [3] Unconstrained Delegation on Computers :";
 Get-ADComputer -Filter {TrustedForDelegation -eq $True} | select SamAccountName,DNSHostName
+Write-Output "   [4] Find Users in the Current Domain that Reside in Groups Across a Trust :";
+Find-ForeignUser
+Write-Output "   [5] Find Users with AdminCount = 1:";
+Get-NetUser -AdminCount | select samaccountname,serviceprincipalname,objectsid
 
 Write-Output "+========================================+";
 Write-Output "           [+] Groups Enumeration        ";
