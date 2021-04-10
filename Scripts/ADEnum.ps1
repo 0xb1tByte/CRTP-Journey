@@ -22,9 +22,7 @@ Write-Output "   [4] Child Domains Information:";
 Get-ADDomain | select ChildDomains
 Write-Output "   [5] Trusts of the Current Domain :";
 Get-NetDomainTrust
-Write-Output "   [6] Trusts of the Current Forest :";
-Get-NetForestDomain -Verbose | Get-NetDomainTrust
-Write-Output "   [7] Map Domain Trust :";
+Write-Output "   [6] Map Domain Trust :";
 Invoke-MapDomainTrust | select SourceName,TargetName,TrustDirection
 
 Write-Output "+========================================+";
